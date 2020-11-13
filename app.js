@@ -1,5 +1,5 @@
 //Параметры от юзера
-let areaSize = 2
+let areaSize = 4
 
 //Параметры для юзера
 let clickCount = 0
@@ -11,12 +11,51 @@ let arrNumber = []  //Двумерный массив, содержащий по
 //Создание поля, фишек
 const gameInit = () => {
     createGameArea() //Создали поле
+    addUserArea() //Создаем поле для пользователя
     createNumbersArr() //Создали изначальный массив фишек (0, 1, 2...)
-    itemsMix(1000) //Перемешали значения в массиве фишек
+    itemsMix(2000) //Перемешали значения в массиве фишек
     itemsDraw(ctx, canvasArea.width / areaSize) //Рисуем итемы
     eventPush() //Запускаем функцию касаний
+
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//Функция создает пользовательскую зону для настроек
+const addUserArea = () => {
+    //Создание самой зоны
+    let divUserArea = document.createElement('div')
+    divUserArea.className = "user__wrap"
+    document.body.insertBefore(divUserArea, document.body.childNodes[1])
+
+    //Выбор размера поля
+    const chooseSize = () => {
+        let divChooseSize = document.createElement('div')
+        divChooseSize.className = "choose__size-wrap"
+        divUserArea.insertBefore(divChooseSize, divUserArea.childNodes[0])
+
+        let sizeArr = []
+        let colorArr = ['#00ff09', '#00ff1a', '#1eff00', '#48ff00', '#8cff00', '#d9ff00', '#f7ff00', '#ffea00', '#ffc400', '#ffa600', '#ff9100', '#ff5500', '#ff2600', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000']
+        for (let i = 2; i <= 21; i++) {
+            sizeArr[i] = document.createElement('div')
+            sizeArr[i].className = "choose__size"
+            sizeArr[i].style.backgroundColor = `${colorArr[i]}`
+            sizeArr[i].innerText = i
+            divChooseSize.insertBefore(sizeArr[i], divChooseSize.childNodes[i])
+            sizeArr[i].addEventListener('click', () => {
+                areaSize = sizeArr[i].innerText
+                areaSize = +areaSize
+                document.body.innerHTML = ''
+                clickCount = 0
+                arrNumber = []
+                gameInit()
+            })
+        }
+    }
+    chooseSize()
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 const eventPush = () => {
     canvasArea.onclick = (e) => { // обрабатываем клики мышью
     let x = (e.pageX - canvasArea.offsetLeft) / (canvasArea.width / areaSize) | 0
@@ -153,7 +192,7 @@ const itemsDraw = (context, size) => {
         context.fillRect(x + 1, y + 1, size - 2, size - 2)
     }
     const numberViewFunction = () => {
-        context.font = "bold " + (size/3) + "px Sans-serif"
+        context.font = "bold " + (size/2) + "px Sans-serif"
         context.textAlign = "center"
         context.textBaseline = "middle"
         context.fillStyle = "#5F9EA0"
