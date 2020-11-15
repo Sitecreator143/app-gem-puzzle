@@ -71,29 +71,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-  color: black;
-}
-
-.container {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
-  margin: 0 auto;
-}
-
-body {
+  padding: 20px;
   display: -webkit-box;
   display: flex;
   -webkit-box-align: center;
           align-items: center;
-  -webkit-box-pack: center;
-          justify-content: center;
+  -webkit-box-pack: start;
+          justify-content: flex-start;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
           flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: black;
+  display: flex;
 }
 
 canvas {
@@ -103,19 +95,28 @@ canvas {
 .user__wrap {
   padding: 10px;
   margin-top: 20px;
+  margin-bottom: 20px;
   width: 95%;
-  min-width: 350px;
-  min-height: 100px;
   display: -webkit-box;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
   border: 4px solid #5F9EA0;
   border-radius: 10px;
 }
 
 .choose__size-wrap {
-  height: 100%;
   display: -webkit-box;
   display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
   flex-wrap: wrap;
 }
 
@@ -133,7 +134,38 @@ canvas {
   border: 2px solid black;
   border-radius: 5px;
 }
+.choose__size:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 
-.choose__size_active {
-  background-color: white;
+.time-click-information {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.div__audio {
+  margin-top: 20px;
+  cursor: pointer;
+  height: 70px;
+  width: 150px;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+          justify-content: center;
+  text-transform: uppercase;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+.div__audio:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.div__best {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 150%;
 }
