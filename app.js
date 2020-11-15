@@ -15,10 +15,10 @@ let typeOfPuzzle = 0
 //Создание поля, фишек
 const gameInit = () => {
     createGameArea() //Создали поле
-    addUserArea() //Создаем поле для пользователя
     createNumbersArr() //Создали изначальный массив фишек (0, 1, 2...)
     itemsMix(5000) //Перемешали значения в массиве фишек
     savedGame() //Извлекает сохраненную игру
+    addUserArea() //Создаем поле для пользователя
     itemsDraw(ctx, canvasArea.width / areaSize) //Рисуем итемы
     eventPush() //Запускаем функцию касаний
 }
@@ -399,12 +399,6 @@ const itemsDraw = (context, size) => {
             }
         }
     }
-
-
-
-
-
-
 }
 
 /* const resize = () => {
