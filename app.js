@@ -8,14 +8,14 @@ let clickCount = 0
 let canvasArea
 let arrNumber = []  //Двумерный массив, содержащий порядок фишек оп оси х, У
 
-//Играть ли музыку? 
+//Играть ли музыку? Какой режим картинок?
 let willPlaySound = true
+let typeOfPuzzle = 0
 
 //Создание поля, фишек
 const gameInit = () => {
     createGameArea() //Создали поле
     addUserArea() //Создаем поле для пользователя
-    
     createNumbersArr() //Создали изначальный массив фишек (0, 1, 2...)
     itemsMix(5000) //Перемешали значения в массиве фишек
     savedGame() //Извлекает сохраненную игру
@@ -86,12 +86,27 @@ const addUserArea = () => {
     }
     chooseSize()
 
+    const typeChange = () => {
+        let divTypeChange = document.createElement('div')
+        divTypeChange.className = "div__audio"
+        divTypeChange.innerText = `Тип: ${typeOfPuzzle + 1}`
+        divUserArea.insertBefore(divTypeChange, divUserArea.childNodes[3])
+        divTypeChange.addEventListener('click', () => {
+            typeOfPuzzle += 1
+            typeOfPuzzle %= 3
+            divTypeChange.innerText = `Тип: ${typeOfPuzzle + 1}`
+            itemsDraw(ctx, canvasArea.width / areaSize)
+        })
+
+    }
+    typeChange()
+
     const audioOn = () => {
         let divAudioOn = document.createElement('div')
         divAudioOn.className = "div__audio"
         divAudioOn.innerText = 'audio'
         divAudioOn.style.backgroundColor = 'yellow'
-        divUserArea.insertBefore(divAudioOn, divUserArea.childNodes[3])
+        divUserArea.insertBefore(divAudioOn, divUserArea.childNodes[4])
         divAudioOn.addEventListener('click', () => {
             if (willPlaySound) {
                 divAudioOn.style.backgroundColor = 'white'
@@ -117,7 +132,7 @@ const addUserArea = () => {
             }
             divBestResult.innerText = `На поле ${areaSize} x ${areaSize} у Вас рекорды: \n1 место, ходов: ${bestResultsArr[0]} \n2 место, ходов: ${bestResultsArr[1]} \n 3 место, ходов: ${bestResultsArr[2]} \n 4 место, ходов: ${bestResultsArr[3]} \n 5 место, ходов: ${bestResultsArr[4]} \n 6 место, ходов: ${bestResultsArr[5]} \n 7 место, ходов: ${bestResultsArr[6]} \n 8 место, ходов: ${bestResultsArr[7]} \n 9 место, ходов: ${bestResultsArr[8]} \n 10 место, ходов: ${bestResultsArr[9]} \n`
         }
-        divUserArea.insertBefore(divBestResult, divUserArea.childNodes[4])
+        divUserArea.insertBefore(divBestResult, divUserArea.childNodes[5])
     }
     bestResult()
 
@@ -148,9 +163,9 @@ const eventPush = () => {
     canvasArea.onclick = (e) => { // обрабатываем клики мышью
 
     if (willPlaySound) {
-        var audio = new Audio(); // Создаём новый элемент Audio
-        audio.src = 'sound/a.mp3'; // Указываем путь к звуку "клика"
-        audio.autoplay = true; // Автоматически запускаем
+        var audio = new Audio() // Создаём новый элемент Audio
+        audio.src = 'sound/a.mp3' // Указываем путь к звуку "клика"
+        audio.autoplay = true // Автоматически запускаем
     }
 
     let x = (e.pageX - canvasArea.offsetLeft) / (canvasArea.width / areaSize) | 0
@@ -263,57 +278,56 @@ const victoryCheck = () => {
         }
     }
     if (isVictory === true) {
-            let winClickCount = clickCount
-            let winTotalTimeSec = totalTimeSec
-            let winTotalTimeMin = totalTimeMin
-            let winTotalTimeHours = totalTimeHours
-            let intervalID = setInterval(() => {
-                itemsMix(10)
-                itemsDraw(ctx, canvasArea.width / areaSize)
-            }, 200)
-            setTimeout(() => {
-                clearInterval(intervalID)
+        let winClickCount = clickCount
+        let winTotalTimeSec = totalTimeSec
+        let winTotalTimeMin = totalTimeMin
+        let winTotalTimeHours = totalTimeHours
 
-                //Запись десяти лучших результатов
-                let saveResultArr = []
-                if (localStorage.getItem(areaSize.toString()) === null) {
-                    saveResultArr.push(winClickCount.toString())
-                    saveResultArr.join('')
-                } else {
-                    saveResultArr = localStorage.getItem(areaSize.toString()).split(',')
-                    for (let i = 0; i <= saveResultArr.length; i) { 
-                        if (winClickCount > +saveResultArr[i] || i === saveResultArr.length) {
-                            if (i !== saveResultArr.length) {
-                                i++
-                            } else {
-                                saveResultArr.push(winClickCount.toString())
-                                i += 10
-                                if (saveResultArr.length === 11) {
-                                    saveResultArr.splice(10, 1)
-                                }
-                                saveResultArr.join('')
-                            }
+        //Анимация финиша (перемешивание)
+        let intervalID = setInterval(() => {
+            itemsMix(10)
+            itemsDraw(ctx, canvasArea.width / areaSize)
+        }, 200)
+        setTimeout(() => {
+            clearInterval(intervalID)
+
+            //Запись десяти лучших результатов
+            let saveResultArr = []
+            if (localStorage.getItem(areaSize.toString()) === null) {
+                saveResultArr.push(winClickCount.toString())
+                saveResultArr.join('')
+            } else {
+                saveResultArr = localStorage.getItem(areaSize.toString()).split(',')
+                for (let i = 0; i <= saveResultArr.length; i) { 
+                    if (winClickCount > +saveResultArr[i] || i === saveResultArr.length) {
+                        if (i !== saveResultArr.length) {
+                            i++
                         } else {
-                            saveResultArr.splice(i, 0, winClickCount.toString())
+                            saveResultArr.push(winClickCount.toString())
                             i += 10
                             if (saveResultArr.length === 11) {
                                 saveResultArr.splice(10, 1)
                             }
                             saveResultArr.join('')
                         }
+                    } else {
+                        saveResultArr.splice(i, 0, winClickCount.toString())
+                        i += 10
+                        if (saveResultArr.length === 11) {
+                            saveResultArr.splice(10, 1)
+                        }
+                        saveResultArr.join('')
                     }
                 }
-                localStorage.setItem(areaSize, saveResultArr)
+            }
+            localStorage.setItem(areaSize, saveResultArr)
 
-                document.body.innerHTML = ''
-                clickCount = 0
-                arrNumber = []
-                localStorage.removeItem('savedGames')
-                localStorage.removeItem('savedGamesSize')
-                localStorage.removeItem('savedGamesSteps')
-                gameInit()
-                alert(`Ура! Вы решили головоломку за ${winTotalTimeHours}:${winTotalTimeMin}:${winTotalTimeSec} и ${winClickCount} ходов`)
-            }, 2000)
+            //Вернем собраную картинку и выведем поздравляшку
+            arrNumber = []
+            createNumbersArr()
+            itemsDraw(ctx, canvasArea.width / areaSize)
+            alert(`Ура! Вы решили головоломку за ${winTotalTimeHours}:${winTotalTimeMin}:${winTotalTimeSec} и ${winClickCount} ходов`)
+        }, 2000)
     }
 }
 
@@ -347,22 +361,50 @@ const itemsDraw = (context, size) => {
     ctx.fillStyle = "#5F9EA0"
     ctx.fillRect(0, 0, canvasArea.width, canvasArea.height)
 
-    for (let i = 0; i < areaSize; i++) {
-        for (let j = 0; j < areaSize; j++) {
-            if (arrNumber[i][j] > 0) {
-                    //Стили итемов рисуем
-                    context.fillStyle = "#000"
-                    context.fillRect(j * size + 1, i * size + 1, size - 2, size - 2)
-                    
-                    //Текст на канвас раскидываем
-                    context.font = "bold " + (size / 2) + "px Sans-serif"
-                    context.textAlign = "center"
-                    context.textBaseline = "middle"
-                    context.fillStyle = "#5F9EA0"
-                    context.fillText(arrNumber[i][j], j * size + size / 2, i * size + size / 2 + size / 32);
+    //Создаем картинку
+    let imgOne = new Image()
+    imgOne.src = 'img/2.jpg'
+    let imgTwo = new Image()
+    imgTwo.src = 'img/3.jpg'
+
+    //Изходя из типа рисуем соответствующий фон
+    imgOne.onload = function() { //Когда обе картинки загрузятся
+        imgTwo.onload = function() {
+            for (let i = 0; i < areaSize; i++) {
+                for (let j = 0; j < areaSize; j++) {
+                    if (arrNumber[i][j] > 0) { //Если ячейка не пустая
+                        if (typeOfPuzzle === 0) { //Если заполняем типом первым
+                            //Стили итемов рисуем
+                            context.fillStyle = "#000"
+                            context.fillRect(j * size + 1, i * size + 1, size - 2, size - 2)
+                            //Текст на канвас раскидываем
+                            context.font = "bold " + (size / 2) + "px Sans-serif"
+                            context.textAlign = "center"
+                            context.textBaseline = "middle"
+                            context.fillStyle = "#5F9EA0"
+                            context.fillText(arrNumber[i][j], j * size + size / 2, i * size + size / 2 + size / 32)
+                        } else if (typeOfPuzzle === 1) {
+                                context.drawImage(imgOne, ((arrNumber[i][j] - 1) % areaSize) * size + 1, Math.floor((arrNumber[i][j] - 1) / areaSize) * size + 1, size - 2, size - 2, j * size + 1, i * size + 1, size - 2, size - 2)
+                        } else {
+                            context.drawImage(imgTwo, ((arrNumber[i][j] - 1) % areaSize) * size + 1, Math.floor((arrNumber[i][j] - 1) / areaSize) * size + 1, size - 2, size - 2, j * size + 1, i * size + 1, size - 2, size - 2)
+                            //Текст на канвас раскидываем
+                            context.font = "bold " + (size / 2) + "px Sans-serif"
+                            context.textAlign = "center"
+                            context.textBaseline = "middle"
+                            context.fillStyle = "#093536"
+                            context.fillText(arrNumber[i][j], j * size + size / 2, i * size + size / 2 + size / 32);
+                        }
+                    }
+                }
             }
         }
     }
+
+
+
+
+
+
 }
 
 /* const resize = () => {
