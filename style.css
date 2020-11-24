@@ -90,6 +90,8 @@ body {
 
 canvas {
   flex-shrink: 0;
+  -webkit-box-flex: 0;
+          flex-grow: 0;
   border: 1px solid #000000;
 }
 
