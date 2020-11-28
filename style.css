@@ -8,6 +8,8 @@ a:focus, a:active {
 }
 
 html, body {
+  box-sizing: border-box;
+  margin: 0;
   height: 100%;
   width: 100%;
   line-height: 1;
@@ -31,7 +33,6 @@ button ::-moz-focus-inner {
 }
 
 body {
-  margin: 0;
   padding: 20px;
   display: -webkit-box;
   display: flex;
@@ -72,7 +73,7 @@ canvas {
   border-radius: 10px;
 }
 
-.choose__size-wrap {
+.user__choose-size-wrap {
   display: -webkit-box;
   display: flex;
   -webkit-box-pack: center;
@@ -82,7 +83,7 @@ canvas {
   flex-wrap: wrap;
 }
 
-.choose__size {
+.user__choose-size {
   margin: 5px 5px;
   cursor: pointer;
   height: 50px;
@@ -96,17 +97,17 @@ canvas {
   border: 2px solid black;
   border-radius: 5px;
 }
-.choose__size:hover {
+.user__choose-size:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.time-click-information {
+.user__information {
   margin-bottom: 20px;
   font-size: 28px;
   text-align: center;
 }
 
-.div__audio {
+.user__audio {
   margin-top: 20px;
   cursor: pointer;
   height: 70px;
@@ -121,11 +122,11 @@ canvas {
   border: 2px solid black;
   border-radius: 5px;
 }
-.div__audio:hover {
+.user__audio:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.div__best {
+.user__best {
   margin-top: 20px;
   font-size: 18px;
   text-align: center;
