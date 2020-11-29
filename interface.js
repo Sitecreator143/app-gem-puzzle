@@ -84,16 +84,20 @@ function changeStyleOfPuzzle() {
 */
 function turnAudio() {
     const elementAudioOn = document.createElement('div')
+    const backgroundColors = {
+        active: 'yellow',
+        inactive: 'white'
+    }
     elementAudioOn.classList.add("user__audio")
     elementAudioOn.innerText = 'audio'
-    elementAudioOn.style.backgroundColor = 'yellow'
+    elementAudioOn.style.backgroundColor = backgroundColors.active
     elementUserArea.insertBefore(elementAudioOn, elementUserArea.childNodes[4])
     elementAudioOn.addEventListener('click', () => {
         if (playSound) {
-            elementAudioOn.style.backgroundColor = 'white'
+            elementAudioOn.style.backgroundColor = backgroundColors.inactive
             playSound = false
         } else {
-            elementAudioOn.style.backgroundColor = 'yellow'
+            elementAudioOn.style.backgroundColor = backgroundColors.active
             playSound = true
         }
     })
@@ -105,12 +109,13 @@ function turnAudio() {
 */
 function showBestResult() {
     const elementBestResult = document.createElement('div')
+    const isResultSaved = localStorage.getItem(areaSize.toString()) === null
     elementBestResult.classList.add("user__best")
-    if (localStorage.getItem(areaSize.toString()) === null) {
+    if ( isResultSaved ) {
         elementBestResult.innerText = `На поле ${areaSize} x ${areaSize} не закончено ни одной партии`
     } else {
         let bestResultsArr = localStorage.getItem(areaSize.toString()).split(',')
-        for (let i = 0; i <= 10; i++) {
+        for (let i = 0; i <= 10 /**Count of best results to show*/; i++) { 
             isNaN(+bestResultsArr[i]) ? bestResultsArr[i] = 'место не занято' : bestResultsArr[i] = bestResultsArr[i]
         }
         elementBestResult.innerText = `На поле ${areaSize} x ${areaSize} у Вас рекорды: \n1 место, ходов: ${bestResultsArr[0]} \n2 место, ходов: ${bestResultsArr[1]} \n 3 место, ходов: ${bestResultsArr[2]} \n 4 место, ходов: ${bestResultsArr[3]} \n 5 место, ходов: ${bestResultsArr[4]} \n 6 место, ходов: ${bestResultsArr[5]} \n 7 место, ходов: ${bestResultsArr[6]} \n 8 место, ходов: ${bestResultsArr[7]} \n 9 место, ходов: ${bestResultsArr[8]} \n 10 место, ходов: ${bestResultsArr[9]} \n`

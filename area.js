@@ -2,8 +2,10 @@
  * Resume game from localStorage
 */
 function saveGame() {
-    if ((localStorage.getItem('savedGames') !== null) && (localStorage.getItem('savedGamesSize') !== null)) {
-        let localArr = localStorage.getItem('savedGames').split(',')
+    const wasSavedGames = localStorage.getItem('savedGames') !== null
+    const wasSavedGamesSize = localStorage.getItem('savedGamesSize') !== null
+    if (wasSavedGames  && wasSavedGamesSize) {
+        const savedGamePositions = localStorage.getItem('savedGames').split(',')
         areaSize = +localStorage.getItem('savedGamesSize')
         clicksCount = +localStorage.getItem('savedGamesSteps')
         cellsArr = []
@@ -12,7 +14,7 @@ function saveGame() {
         }
         for (let i = 0; i < areaSize; i++) {
             for (let j = 0; j < areaSize; j++) {
-                cellsArr[i][j] = +localArr[i * areaSize + j ]
+                cellsArr[i][j] = +savedGamePositions[i * areaSize + j ]
             }
         }
     }
@@ -25,52 +27,37 @@ function moveCell() {
     /**
      * Process clicks
     */
-    canvasArea.onclick = (e) => {
-
-    if (playSound) {
-        var audio = new Audio()
-        audio.src = 'sound/a.mp3'
-        audio.autoplay = true
-    }
-
-    let x = (e.pageX - canvasArea.offsetLeft) / (canvasArea.width / areaSize) | 0
-    let y = (e.pageY - canvasArea.offsetTop)  / (canvasArea.width / areaSize) | 0
-    itemsMove(x, y)
-    drawCells(ctx, canvasArea.width / areaSize, cellImage)
-    victoryCheck()
-    localStorage.setItem('savedGames', cellsArr)
-    localStorage.setItem('savedGamesSize', areaSize)
-    localStorage.setItem('savedGamesSteps', clicksCount)
-    }
-
-    /**
-     * Process touches
-    */
-    canvasArea.ontouchend = function(e) {
-    var x = (e.touches[0].pageX - canvasArea.offsetLeft) / (canvasArea.width / areaSize) | 0
-    var y = (e.touches[0].pageY - canvasArea.offsetTop)  /(canvasArea.width / areaSize) | 0
-    itemsMove(x, y)
-    drawCells(ctx, canvasArea.width / areaSize, cellImage)
-    victoryCheck()
-    localStorage.setItem('savedGames', cellsArr)
-    localStorage.setItem('savedGamesSize', areaSize)
-    localStorage.setItem('savedGamesSteps', clicksCount)
-    }
+    canvasArea.addEventListener('click', (click) => {
+        if (playSound) {
+            const audio = new Audio()
+            audio.src = 'sound/a.mp3'
+            audio.autoplay = true
+        }
     
+        const x = (click.pageX - canvasArea.offsetLeft) / (canvasArea.width / areaSize) | 0
+        const y = (click.pageY - canvasArea.offsetTop)  / (canvasArea.width / areaSize) | 0
+        changeCellPosition(x, y)
+        drawCells(ctx, canvasArea.width / areaSize, cellImage)
+        checkVictory()
+        localStorage.setItem('savedGames', cellsArr)
+        localStorage.setItem('savedGamesSize', areaSize)
+        localStorage.setItem('savedGamesSteps', clicksCount)
+    })  
 }
 
 /**
  * Create area
 */
 function createGameArea() {
+    const windowWidth = document.documentElement.clientWidth
     canvasArea = document.createElement("canvas") 
-    if (document.documentElement.clientWidth > 800) {
+    if (windowWidth > 800) {
         canvasArea.width = 500
         canvasArea.height = 500
-    } else if (document.documentElement.clientWidth > 300) {
+    } else if (windowWidth > 300) {
         canvasArea.width = 300 
         canvasArea.height = 300
-    } else if (document.documentElement.clientWidth > 200) {
+    } else if (windowWidth > 200) {
         canvasArea.width = 200 
         canvasArea.height = 200
     } else {
@@ -126,10 +113,11 @@ function getRandomBool() {
 /**
  * Change items arr to move later
 */
-function itemsMove(x, y) {
+function changeCellPosition(x, y) {
     let nullX = getEmptyCell().x 
     let nullY = getEmptyCell().y
-    if (((x - 1 === nullX || x + 1 === nullX) && y === nullY) || ((y - 1 === nullY || y + 1 === nullY) && x === nullX)) { 
+    const isEmptyClose = ((x - 1 === nullX || x + 1 === nullX) && y === nullY) || ((y - 1 === nullY || y + 1 === nullY) && x === nullX)
+    if (isEmptyClose) { 
         cellsArr[nullY][nullX] = cellsArr[y][x] 
         cellsArr[y][x] = 0 
         clicksCount++
@@ -139,7 +127,7 @@ function itemsMove(x, y) {
 /**
  * Check victory
 */
-function victoryCheck() {
+function checkVictory() {
     let arrVictoryOne = []
     for (let i = 0; i < areaSize; i++) {
         arrVictoryOne.push([])
@@ -157,7 +145,7 @@ function victoryCheck() {
             }
         }
     }
-    if (isVictory === true) {
+    if (isVictory) {
         let winClicksCount = clicksCount
 
         /**
@@ -177,7 +165,8 @@ function victoryCheck() {
             clearInterval(intervalID)
 
             let saveResultArr = []
-            if (localStorage.getItem(areaSize.toString()) === null) {
+            let isResultSaved = localStorage.getItem(areaSize.toString()) === null
+            if ( isResultSaved ) {
                 saveResultArr.push(winClicksCount.toString())
                 saveResultArr.join('')
             } else {
@@ -235,7 +224,7 @@ function mixCells(mixStepsCount) {
         if (upRightMove && upLeftMove)   { x = nullX; y = nullY - 1;}
 
         if (0 <= x && x <= areaSize - 1 && 0 <= y && y <= areaSize - 1) {
-            itemsMove(x, y)
+            changeCellPosition(x, y)
         }
     }
     clicksCount = 0
