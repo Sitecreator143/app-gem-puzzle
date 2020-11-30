@@ -75,7 +75,7 @@ function changeStyleOfPuzzle() {
         styleOfPuzzle++
         styleOfPuzzle %= 3
         elementTypeChange.innerText = `Тип: ${styleOfPuzzleArr[styleOfPuzzle]}`
-        drawCells(ctx, canvasArea.width / areaSize, cellImage)
+        drawCells(ctx, playingField.width / areaSize, cellImage)
     })
 }
 
@@ -84,10 +84,6 @@ function changeStyleOfPuzzle() {
 */
 function turnAudio() {
     const elementAudioOn = document.createElement('div')
-    const backgroundColors = {
-        active: 'yellow',
-        inactive: 'white'
-    }
     elementAudioOn.classList.add("user__audio")
     elementAudioOn.innerText = 'audio'
     elementAudioOn.style.backgroundColor = backgroundColors.active

@@ -1,16 +1,22 @@
 let areaSize = 4
 let clicksCount = 0
 
-let canvasArea
+let playingField
 let cellsArr = []
 
 let playSound = true
 styleOfPuzzle = 0
 
-let cellImage = new Image()
-cellImage.src = `img/${Math.floor(Math.random() * (8 - 1 + 1) + 1)}.jpg`
+const picturesCount = 8
+const cellImage = new Image()
+cellImage.src = `img/${Math.floor(Math.random() * (picturesCount) + 1)}.jpg`
 
-
+const backgroundColors = {
+    active: 'yellow',
+    inactive: 'white',
+    seaColor: '#5F9EA0',
+    blackColor: '#000'
+}
 
 /** 
  * Game initialization when body is onload
@@ -29,7 +35,7 @@ function initializeGame() {
     turnAudio()
     showBestResult()
     //createUserArea()
-    cellImage.onload = drawCells(ctx, canvasArea.width / areaSize, cellImage)
+    cellImage.onload = drawCells(ctx, playingField.width / areaSize, cellImage)
     moveCell()
 }
 
